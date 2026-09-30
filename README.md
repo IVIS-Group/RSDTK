@@ -15,8 +15,7 @@ georeferencing and wavelength metadata.
 
 **14 sensor families. 30+ product types. One interface.**
 
-<!-- TODO: add screenshot -->
-<!-- ![RSDTK interface](docs/images/rsdtk_gui.png) -->
+![RSDTK interface](docs/images/rsdtk_gui.png)
 
 ---
 

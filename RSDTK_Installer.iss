@@ -8,13 +8,13 @@
 
 [Setup]
 AppName=Remote Sensing Data Toolkit
-AppVersion=1.2
+AppVersion=1.2.1
 AppPublisher=University of Pittsburgh — Geology & Environmental Science
 DefaultDirName={autopf}\RSDTK
 DefaultGroupName=RSDTK
 UninstallDisplayIcon={app}\RSDTK.exe
 OutputDir=Installer_Output
-OutputBaseFilename=RSDTK_v1.2_Setup
+OutputBaseFilename=RSDTK_v1.2.1_Setup
 Compression=lzma2
 SolidCompression=yes
 SetupIconFile=icon.ico
@@ -26,7 +26,7 @@ PrivilegesRequired=lowest
 
 [Files]
 ; The compiled .exe from PyInstaller
-Source: "dist\RSDTK.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "dist\RSDTK\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; Include the icon
 Source: "icon.ico"; DestDir: "{app}"; Flags: ignoreversion
 

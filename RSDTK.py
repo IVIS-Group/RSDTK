@@ -1,5 +1,5 @@
 """
-Remote Sensing Data Toolkit (RSDTK) v1.2
+Remote Sensing Data Toolkit (RSDTK) v1.2.1
 A comprehensive GUI application for batch processing and converting
 satellite and airborne remote sensing data to analysis-ready formats.
  
@@ -42,7 +42,7 @@ from tkinter import filedialog, messagebox
 # ============================================================================
  
 APP_NAME    = "Remote Sensing Data Toolkit"
-APP_VERSION = "1.2"
+APP_VERSION = "1.2.1"
 APP_SIZE    = "1200x900"
 APP_MIN_SIZE = (1000, 800)
  
