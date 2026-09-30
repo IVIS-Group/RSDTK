@@ -9,7 +9,7 @@ authors:
     email: "dbwilliams@pitt.edu"
     affiliation: "Department of Geology & Environmental Science, University of Pittsburgh"
 repository-code: "https://github.com/IVIS-Group/RSDTK"
-"https://ivis-group.github.io/RSDTK/"
+# url: "https://ivis-group.github.io/RSDTK/"
 abstract: >-
   RSDTK is a desktop application for batch converting satellite and airborne
   remote sensing data into analysis-ready GeoTIFF and ENVI formats. It supports
