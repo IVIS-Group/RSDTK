@@ -65,6 +65,92 @@ DLL_TO_PROJECT = {
     "lapack": ("LAPACK", "https://www.netlib.org/lapack/"),
 }
 
+# Directory names in the build output that are not distributable components in
+# their own right: PyInstaller scaffolding, bundled-DLL sidecars belonging to a
+# parent package, and packaging metadata directories.
+NOT_COMPONENTS = {
+    "_tcl_data", "_tk_data", "library", "pywin32_system32", "win32",
+    "win32com", "share", "etc", "lib", "include", "certifi",
+    "gdal_data", "gdalplugins", "proj_data", "tcl", "tk", "tcl8", "tk8",
+}
+
+# Suffixes that mark a directory as metadata or a sidecar rather than a project
+NOT_COMPONENT_SUFFIXES = (".dist_info", ".dist-info", ".egg_info", ".egg-info",
+                          ".libs", ".data")
+
+# Licenses for components that conda-meta and dist-info reliably fail to
+# resolve, usually because the distributed name differs from the package name.
+# Verified against each project's own license file.
+LICENSE_FALLBACK = {
+    "netcdf-c":    "BSD 3-Clause",
+    "netcdf4":     "MIT",
+    "cftime":      "MIT",
+    "h5py":        "BSD 3-Clause",
+    "hdf5":        "BSD 3-Clause (HDF Group)",
+    "hdf4":        "BSD 3-Clause (HDF Group)",
+    "pyproj":      "MIT",
+    "osgeo":       "MIT",          # GDAL Python bindings
+    "gdal":        "MIT",
+    "proj":        "MIT",
+    "tcl":         "Tcl/Tk License (BSD-style)",
+    "tk":          "Tcl/Tk License (BSD-style)",
+    "zstandard":   "BSD 3-Clause OR GPL-2.0 (taken under BSD 3-Clause)",
+    "zstd":        "BSD 3-Clause OR GPL-2.0 (taken under BSD 3-Clause)",
+    "libwebp":     "BSD 3-Clause",
+    "webp":        "BSD 3-Clause",
+    "libtiff":     "libtiff License (BSD-style)",
+    "tiff":        "libtiff License (BSD-style)",
+    "openjpeg":    "BSD 2-Clause",
+    "openjp2":     "BSD 2-Clause",
+    "libcurl":     "curl License (MIT-style)",
+    "curl":        "curl License (MIT-style)",
+    "expat":       "MIT",
+    "sqlite":      "Public Domain",
+    "zlib":        "zlib License",
+    "libpng":      "PNG Reference Library License",
+    "png":         "PNG Reference Library License",
+    "libjpeg-turbo": "BSD 3-Clause / IJG",
+    "jpeg":        "BSD 3-Clause / IJG",
+    "libxml2":     "MIT",
+    "xml2":        "MIT",
+    "openssl":     "Apache-2.0 (OpenSSL 3.x)",
+    "openblas":    "BSD 3-Clause",
+    "lapack":      "BSD 3-Clause",
+    "lz4":         "BSD 2-Clause / GPL-2.0 (taken under BSD 2-Clause)",
+    "geos":        "LGPL-2.1",
+    "python":      "PSF License",
+    "rasterio":    "BSD 3-Clause",
+    "numpy":       "BSD 3-Clause",
+    "scipy":       "BSD 3-Clause",
+    "customtkinter": "MIT",
+    "darkdetect":  "BSD 3-Clause",
+    "pyhdf":       "MIT",
+    "affine":      "BSD 3-Clause",
+    "attrs":       "MIT",
+    "click":       "BSD 3-Clause",
+    "cligj":       "BSD 3-Clause",
+    "snuggs":      "MIT",
+    "pyparsing":   "MIT",
+    "pillow":      "MIT-CMU (HPND)",
+    "packaging":   "Apache-2.0 OR BSD-2-Clause",
+    "importlib_metadata": "Apache-2.0",
+    "certifi":     "MPL-2.0",
+}
+
+
+def is_component(name):
+    """Is this build-output entry a distributable component in its own right?"""
+    low = name.lower().replace("-", "_")
+    if low in NOT_COMPONENTS:
+        return False
+    if low.endswith(NOT_COMPONENT_SUFFIXES):
+        return False
+    # strip a trailing version, e.g. attrs_25.4.0 -> attrs
+    if re.match(r'^[\w]+_\d+[\d.]*$', low):
+        return False
+    return True
+
+
 # Python packages we expect to see, with their project URLs
 PY_PACKAGE_URLS = {
     "numpy": "https://numpy.org/",
@@ -120,8 +206,7 @@ def scan_dist(dist):
 
         elif os.path.isdir(path):
             name = low.replace("-", "_")
-            if name in ("gdal_data", "gdalplugins", "proj_data", "share",
-                        "tcl", "tk", "tcl8", "tk8"):
+            if not is_component(name):
                 continue
             py_packages.add(name)
 
@@ -199,11 +284,22 @@ def lookup_license(name, conda, pip):
     key = name.lower().replace("-", "_")
     for table in (conda, pip):
         if key in table:
-            return table[key]
-        # try a few normalizations
+            ver, lic = table[key]
+            if lic:
+                return (ver, lic)
+            # version known but license blank: fall through to the table below
+            fb = LICENSE_FALLBACK.get(key) or LICENSE_FALLBACK.get(key.replace("_", "-"))
+            if fb:
+                return (ver, fb)
+            return (ver, lic)
         for alt in (key.replace("_", "-"), key.replace("4", ""), "lib" + key):
             if alt in table:
-                return table[alt]
+                ver, lic = table[alt]
+                return (ver, lic or LICENSE_FALLBACK.get(alt, ""))
+    # not installed as a package at all (native libs bundled as DLLs)
+    fb = LICENSE_FALLBACK.get(key) or LICENSE_FALLBACK.get(key.replace("_", "-"))
+    if fb:
+        return ("", fb)
     return None
 
 
@@ -294,14 +390,68 @@ def main():
                 fh.write(f"- {n}\n")
 
         if unclassified:
-            fh.write("\n## Unrecognized files in the build\n\n")
-            fh.write("Present in the build output but not matched to a known "
-                     "project. Most will be\nPython extension modules "
-                     "belonging to packages already listed.\n\n")
-            for f in sorted(unclassified)[:60]:
-                fh.write(f"- `{f}`\n")
-            if len(unclassified) > 60:
-                fh.write(f"- ... and {len(unclassified) - 60} more\n")
+            # Group rather than dumping every filename. The bulk are Windows
+            # CRT redistributables and transitive dependencies pulled in by
+            # GDAL, none of which are separately attributable components.
+            groups = {
+                'Windows CRT / API sets (Microsoft redistributable)':
+                    [f for f in unclassified if f.lower().startswith('api-ms-win')],
+                'AWS SDK (transitive, via GDAL cloud drivers)':
+                    [f for f in unclassified if f.lower().startswith(('aws-c-', 'aws-cpp-', 'aws-checksums'))],
+                'Microsoft Visual C++ runtime':
+                    [f for f in unclassified if f.lower().startswith(('msvc', 'vcruntime', 'concrt', 'ucrtbase'))],
+            }
+            named = {f for g in groups.values() for f in g}
+            other = sorted(f for f in unclassified if f not in named)
+
+            fh.write("\n## Other files in the build\n\n")
+            fh.write("Present in the build output but not separately "
+                     "attributable components. Most are\nPython extension "
+                     "modules belonging to packages already listed above, "
+                     "platform\nredistributables, or transitive dependencies "
+                     "of GDAL.\n\n")
+            for label, items in groups.items():
+                if items:
+                    fh.write(f"- {label}: {len(items)} files\n")
+            if other:
+                fh.write(f"- Other libraries and extension modules: "
+                         f"{len(other)} files\n")
+                shown = [f for f in other if f.lower().endswith('.dll')][:20]
+                if shown:
+                    fh.write("\n  Notable DLLs among these:\n")
+                    for f in shown:
+                        fh.write(f"  - `{f}`\n")
+
+        # --- licenses needing specific comment ---
+        copyleft = [(n, v, l, u) for n, v, l, u in merged.values()
+                    if any(t in (l or '').upper() for t in ('LGPL', 'GPL', 'MPL'))]
+        if copyleft:
+            fh.write("\n## Components with obligations beyond attribution\n\n")
+            for n, v, l, u in copyleft:
+                lu = (l or '').upper()
+                fh.write(f"**{n}** ({l})\n\n")
+                if 'TAKEN UNDER' in lu:
+                    fh.write(
+                        "Dual-licensed. Used here under the permissive option "
+                        "noted above, which\nimposes attribution requirements "
+                        "only. The copyleft option is not exercised.\n\n")
+                elif 'LGPL' in lu:
+                    fh.write(
+                        "Distributed as a dynamically linked shared library "
+                        "(DLL) which the user is\nfree to replace with their "
+                        "own build. This is the form of use the LGPL permits "
+                        "for\nsoftware under a different license, and no part "
+                        "of RSDTK is derived from its\nsource. The library is "
+                        "unmodified from the conda-forge distribution.\n\n")
+                elif 'MPL' in lu:
+                    fh.write(
+                        "Distributed unmodified. The MPL applies file-by-file "
+                        "to its own source, which\nis unchanged here, and "
+                        "imposes no conditions on RSDTK.\n\n")
+                else:
+                    fh.write(
+                        "Review the distribution terms before redistributing "
+                        "this build.\n\n")
 
         if bat_items:
             fh.write("\n## Explicitly bundled by the build script\n\n")
