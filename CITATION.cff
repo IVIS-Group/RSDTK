@@ -8,7 +8,7 @@ authors:
     orcid: "https://orcid.org/0000-0003-4027-8544"
     email: "dbwilliams@pitt.edu"
     affiliation: "Department of Geology & Environmental Science, University of Pittsburgh"
-repository-code: "https://github.com/TODO-ORG/RSDTK"
+repository-code: "https://github.com/IVIS-Group/RSDTK"
 # TODO: uncomment and fill once GitHub Pages or a docs site exists
 # url: "https://TODO-ORG.github.io/RSDTK/"
 abstract: >-
@@ -33,6 +33,6 @@ keywords:
   - volcanology
   - geoscience education
 license: MIT
-version: 1.2.0
+version: 1.2.1
 # TODO: set to the actual release date
-date-released: "2026-10-01"
+date-released: "2026-10-03"
