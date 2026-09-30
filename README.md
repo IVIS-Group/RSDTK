@@ -107,7 +107,7 @@ Python and all dependencies are bundled.
 Requires Python 3.10 or later.
 
 ```bash
-git clone https://github.com/<ORG>/RSDTK.git
+git clone https://github.com/IVIS-Group/RSDTK.git
 cd RSDTK
 
 # conda (recommended — GDAL and pyhdf install more reliably)
