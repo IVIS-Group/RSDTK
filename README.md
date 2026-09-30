@@ -15,8 +15,7 @@ georeferencing and wavelength metadata.
 
 **14 sensor families. 30+ product types. One interface.**
 
-<!-- TODO: add screenshot -->
-<!-- ![RSDTK interface](docs/images/rsdtk_gui.png) -->
+![RSDTK interface](docs/images/rsdtk_gui.png)
 
 ---
 
@@ -107,7 +106,7 @@ Python and all dependencies are bundled.
 Requires Python 3.10 or later.
 
 ```bash
-git clone https://github.com/IVIS-Group/RSDTK.git
+git clone https://github.com/<ORG>/RSDTK.git
 cd RSDTK
 
 # conda (recommended — GDAL and pyhdf install more reliably)
