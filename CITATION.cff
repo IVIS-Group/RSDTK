@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+title: "RSDTK: Remote Sensing Data Toolkit"
+message: "If you use this software, please cite it using the metadata from this file."
+type: software
+authors:
+  - given-names: "Daniel B."
+    family-names: Williams
+    orcid: "https://orcid.org/0000-0003-4027-8544"
+    email: "dbwilliams@pitt.edu"
+    affiliation: "Department of Geology & Environmental Science, University of Pittsburgh"
+repository-code: "https://github.com/TODO-ORG/RSDTK"
+# TODO: uncomment and fill once GitHub Pages or a docs site exists
+# url: "https://TODO-ORG.github.io/RSDTK/"
+abstract: >-
+  RSDTK is a desktop application for batch converting satellite and airborne
+  remote sensing data into analysis-ready GeoTIFF and ENVI formats. It supports
+  14 sensor families and over 30 product types, handling per-product calibration
+  and scaling, swath reprojection, GLT orthorectification, spatial and spectral
+  subsetting, and the writing of ENVI headers with wavelength metadata. RSDTK is
+  intended to reduce the preprocessing burden in multi-sensor remote sensing
+  research and teaching, with particular attention to thermal infrared
+  applications.
+keywords:
+  - remote sensing
+  - thermal infrared
+  - hyperspectral
+  - data preprocessing
+  - GeoTIFF
+  - ENVI
+  - ASTER
+  - ECOSTRESS
+  - EMIT
+  - volcanology
+  - geoscience education
+license: MIT
+version: 1.2.0
+# TODO: set to the actual release date
+date-released: "2026-10-01"

@@ -1,0 +1,61 @@
+name: Sensor or product request
+description: Request support for a sensor or product RSDTK does not yet handle
+title: "[Sensor] "
+labels: ["enhancement", "sensor request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Known gaps are listed in [ROADMAP.md](../blob/main/ROADMAP.md). If yours
+        is already there, a comment on the existing issue is just as useful —
+        priorities are driven partly by how many people ask for something.
+
+  - type: input
+    id: mission
+    attributes:
+      label: Mission and instrument
+      placeholder: "e.g. GOES-18 ABI, Himawari-9 AHI, PACE OCI"
+    validations:
+      required: true
+
+  - type: input
+    id: product
+    attributes:
+      label: Product and level
+      placeholder: "e.g. MOD021KM L1B radiance, VNP14 active fire"
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Where is it distributed from?
+      placeholder: "e.g. LP DAAC, LAADS DAAC, Copernicus Data Space, ORNL DAAC"
+    validations:
+      required: true
+
+  - type: input
+    id: filename
+    attributes:
+      label: Representative filename
+      placeholder: "e.g. MOD021KM.A2024001.0000.061.2024001123456.hdf"
+
+  - type: textarea
+    id: structure
+    attributes:
+      label: Internal structure
+      description: >-
+        If you can, paste the output of `ncdump -h file.nc`, `h5dump -n file.h5`,
+        or a pyhdf dataset listing. This is the single most helpful thing for
+        estimating how much work a new converter needs.
+      render: shell
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: What would you use it for?
+      description: >-
+        Helps decide sensible defaults — which bands matter, what projection,
+        whether QA layers are needed.
+    validations:
+      required: true

@@ -1,0 +1,113 @@
+name: Bug report
+description: Something is not working with a sensor or product
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this. The single most useful thing you can include
+        is the full Processing Log output, including the whole traceback.
+
+  - type: dropdown
+    id: sensor
+    attributes:
+      label: Sensor
+      options:
+        - ASTER (V004 GeoTIFF)
+        - ASTER (V003 HDF)
+        - Landsat Level-1
+        - Landsat Level-2
+        - Sentinel-2 L2A
+        - Sentinel-3 (SLSTR / OLCI / Synergy)
+        - ECOSTRESS L1CT
+        - ECOSTRESS L2 LSTE
+        - VIIRS
+        - MODIS
+        - EMIT L2A
+        - AIRS L1B
+        - MASTER L1B
+        - MASTER L2
+        - HyTES L1
+        - HyTES L2
+        - AVIRIS-3/5
+        - AVIRIS-NG
+        - Classic AVIRIS
+        - Not sensor-specific (GUI, install, other)
+    validations:
+      required: true
+
+  - type: input
+    id: product
+    attributes:
+      label: Product type
+      description: The specific product selected in the dropdown, if applicable
+      placeholder: "e.g. AST_09T, SLSTR L2 LST, MOD11A1"
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you expected, and what occurred instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: log
+    attributes:
+      label: Processing Log output
+      description: >-
+        Paste the full log, including the complete traceback. Scroll up in the
+        log panel to capture all of it.
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: filename
+    attributes:
+      label: Example input filename
+      description: >-
+        Product detection works from filename patterns, so a mismatch here is a
+        common cause. No need to attach the file itself.
+      placeholder: "e.g. AV320230927t190252_000_L1B_RDN_cbeae6f8_RDN.nc"
+
+  - type: dropdown
+    id: folder-layout
+    attributes:
+      label: Input folder layout
+      options:
+        - One subfolder per granule
+        - All files flat in one folder
+        - Mixed / other
+    validations:
+      required: true
+
+  - type: textarea
+    id: options
+    attributes:
+      label: Options selected
+      description: >-
+        Output format, bounding box, spectral subset, resolution, projection,
+        overwrite setting
+      placeholder: "e.g. Both formats, bbox from shapefile, every 10th band"
+
+  - type: dropdown
+    id: install
+    attributes:
+      label: How are you running RSDTK?
+      options:
+        - Windows installer
+        - From source (Windows)
+        - From source (macOS)
+        - From source (Linux)
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: RSDTK version
+      placeholder: "e.g. 1.2"
+    validations:
+      required: true

@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSDTK User Guide — Remote Sensing Data Toolkit v1.2</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f111a;
+  --bg-card: #1a1d2e;
+  --bg-callout: #1e2136;
+  --accent: #e94560;
+  --accent2: #4cc9f0;
+  --accent3: #7b61ff;
+  --text: #e0e0e6;
+  --text-muted: #8888a0;
+  --text-heading: #ffffff;
+  --border: #2a2d42;
+  --success: #2ecc71;
+  --warning: #f39c12;
+  --info: #4cc9f0;
+  --tir: #e94560;
+  --vnir: #4cc9f0;
+  --swir: #7b61ff;
+  --thermal: #ff6b35;
+  --font-body: 'DM Sans', -apple-system, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ---- LAYOUT ---- */
+.container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+/* ---- HERO ---- */
+.hero {
+  padding: 80px 0 60px;
+  text-align: center;
+  background: linear-gradient(135deg, #0f111a 0%, #1a1d2e 50%, #0f111a 100%);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle at 30% 40%, rgba(233,69,96,0.06) 0%, transparent 50%),
+              radial-gradient(circle at 70% 60%, rgba(76,201,240,0.06) 0%, transparent 50%);
+  animation: drift 20s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  from { transform: translate(0,0); }
+  to { transform: translate(-3%,2%); }
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: 3.2rem;
+  font-weight: 800;
+  color: var(--text-heading);
+  letter-spacing: -0.02em;
+  position: relative;
+}
+.hero h1 span { color: var(--accent); }
+.hero .subtitle {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  margin-top: 12px;
+  position: relative;
+}
+.hero .version-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-top: 16px;
+  position: relative;
+  letter-spacing: 0.05em;
+}
+
+/* ---- NAV / TOC ---- */
+nav.toc {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin: 40px auto;
+  max-width: 700px;
+}
+nav.toc h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+nav.toc ol { padding-left: 20px; }
+nav.toc li { margin: 6px 0; }
+nav.toc a {
+  color: var(--accent2);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+nav.toc a:hover { color: var(--accent); }
+nav.toc ol ol { margin-top: 4px; }
+nav.toc ol ol li { font-size: 0.92rem; color: var(--text-muted); }
+
+/* ---- SECTIONS ---- */
+section { padding: 48px 0; }
+section + section { border-top: 1px solid var(--border); }
+
+h2 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 20px;
+}
+h2 .section-num {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  margin-right: 8px;
+}
+h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin: 32px 0 12px;
+}
+h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent2);
+  margin: 24px 0 8px;
+}
+p { margin-bottom: 14px; }
+
+/* ---- CALLOUT BOXES ---- */
+.callout {
+  background: var(--bg-callout);
+  border-left: 4px solid var(--info);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 20px 0;
+  font-size: 0.95rem;
+}
+.callout.warning { border-left-color: var(--warning); }
+.callout.success { border-left-color: var(--success); }
+.callout.danger { border-left-color: var(--accent); }
+.callout .callout-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.callout.warning .callout-title { color: var(--warning); }
+.callout.success .callout-title { color: var(--success); }
+.callout.danger .callout-title { color: var(--accent); }
+.callout .callout-title { color: var(--info); }
+
+/* ---- CODE ---- */
+code {
+  font-family: var(--font-mono);
+  background: rgba(123,97,255,0.12);
+  color: var(--accent3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88em;
+}
+pre {
+  background: #12141f;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  margin: 16px 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+pre code { background: none; padding: 0; color: inherit; }
+
+/* ---- SENSOR CARDS ---- */
+.sensor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+.sensor-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.sensor-card:hover {
+  border-color: var(--accent2);
+  transform: translateY(-2px);
+}
+.sensor-card .sensor-icon { font-size: 1.8rem; margin-bottom: 8px; }
+.sensor-card .sensor-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-heading);
+  margin-bottom: 4px;
+}
+.sensor-card .sensor-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.sensor-card .badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-top: 8px;
+  letter-spacing: 0.04em;
+}
+.badge-tir { background: rgba(233,69,96,0.15); color: var(--tir); }
+.badge-vnir { background: rgba(76,201,240,0.15); color: var(--vnir); }
+.badge-swir { background: rgba(123,97,255,0.15); color: var(--swir); }
+.badge-hyper { background: rgba(46,204,113,0.15); color: var(--success); }
+.badge-multi { background: rgba(243,156,18,0.15); color: var(--warning); }
+
+/* ---- TABLES ---- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 0.9rem;
+}
+th {
+  background: var(--bg-callout);
+  color: var(--accent2);
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--border);
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+tr:hover td { background: rgba(76,201,240,0.04); }
+
+/* ---- STEP LIST ---- */
+.steps { counter-reset: step; list-style: none; padding: 0; }
+.steps li {
+  counter-increment: step;
+  position: relative;
+  padding: 16px 0 16px 56px;
+  border-bottom: 1px solid var(--border);
+}
+.steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0; top: 16px;
+  width: 36px; height: 36px;
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.steps li:last-child { border-bottom: none; }
+
+/* ---- PRODUCT DETAIL ---- */
+.product-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px 0;
+}
+.product-block h4 {
+  margin-top: 0;
+  color: var(--text-heading);
+}
+.product-block .product-meta {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+  font-size: 0.88rem;
+}
+.product-block .meta-item {
+  color: var(--text-muted);
+}
+.product-block .meta-item strong {
+  color: var(--accent2);
+}
+
+/* ---- FOOTER ---- */
+footer {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 700px) {
+  .sensor-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 2.2rem; }
+  .product-block .product-meta { flex-direction: column; gap: 8px; }
+}
+
+/* ---- PRINT / PDF ---- */
+@media print {
+  @page {
+    size: letter;
+    margin: 0.75in 0.8in;
+  }
+
+  body {
+    background: white;
+    color: #1a1a1a;
+    font-size: 10.5pt;
+    line-height: 1.55;
+  }
+
+  .container { max-width: 100%; padding: 0; }
+
+  /* Hero — compact for print, force page 1 */
+  .hero {
+    padding: 30px 0 20px;
+    background: white;
+    border-bottom: 2px solid #e94560;
+    page-break-after: avoid;
+  }
+  .hero::before { display: none; }
+  .hero h1 { font-size: 24pt; color: #1a1a1a; }
+  .hero h1 span { color: #e94560; }
+  .hero .subtitle { color: #555; font-size: 11pt; }
+  .hero .version-badge { background: #e94560; font-size: 8pt; }
+
+  /* TOC — keep together on one page */
+  nav.toc {
+    background: #f5f5f8;
+    border: 1px solid #ddd;
+    padding: 16px 20px;
+    page-break-inside: avoid;
+    page-break-after: always;
+  }
+  nav.toc h2 { color: #e94560; }
+  nav.toc a { color: #2255aa; }
+  nav.toc ol ol li { color: #555; }
+
+  /* Sections — start major sections on new pages */
+  section {
+    padding: 20px 0;
+    border-top: none;
+  }
+
+  /* Force page breaks before each major section */
+  section#sensors { page-break-before: always; }
+  section#features { page-break-before: always; }
+  section#output-formats { page-break-before: always; }
+  section#troubleshooting { page-break-before: always; }
+
+  /* Headings */
+  h2 {
+    color: #1a1a1a;
+    font-size: 18pt;
+    page-break-after: avoid;
+    margin-bottom: 10px;
+  }
+  h2 .section-num { color: #e94560; }
+  h3 {
+    color: #1a1a1a;
+    font-size: 13pt;
+    page-break-after: avoid;
+    margin-top: 18px;
+  }
+  h4 {
+    color: #2255aa;
+    page-break-after: avoid;
+  }
+
+  /* Keep content blocks together */
+  .callout {
+    background: #f5f5f8;
+    border-left-color: #2255aa;
+    page-break-inside: avoid;
+    margin: 10px 0;
+    padding: 10px 14px;
+  }
+  .callout.warning { border-left-color: #cc8800; }
+  .callout.warning .callout-title { color: #cc8800; }
+  .callout.success { border-left-color: #1a8a4a; }
+  .callout.success .callout-title { color: #1a8a4a; }
+  .callout.danger { border-left-color: #cc2244; }
+  .callout.danger .callout-title { color: #cc2244; }
+  .callout .callout-title { color: #2255aa; }
+
+  .product-block {
+    background: #f9f9fc;
+    border: 1px solid #ddd;
+    page-break-inside: avoid;
+    padding: 14px 18px;
+    margin: 10px 0;
+  }
+
+  /* Sensor grid — single column for print */
+  .sensor-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .sensor-card {
+    background: #f5f5f8;
+    border: 1px solid #ddd;
+    page-break-inside: avoid;
+    padding: 12px;
+  }
+  .sensor-card .sensor-name { color: #1a1a1a; }
+  .sensor-card .sensor-desc { color: #555; }
+
+  /* Tables */
+  table { page-break-inside: avoid; font-size: 9pt; }
+  th {
+    background: #e8e8ee;
+    color: #1a1a1a;
+    border-bottom: 2px solid #999;
+  }
+  td { border-bottom: 1px solid #ddd; }
+  tr:hover td { background: transparent; }
+
+  /* Steps */
+  .steps li { page-break-inside: avoid; }
+  .steps li::before {
+    background: #e94560;
+    color: white;
+  }
+
+  /* Code */
+  code {
+    background: #eee;
+    color: #333;
+    font-size: 9pt;
+  }
+  pre {
+    background: #f0f0f4;
+    border: 1px solid #ddd;
+    font-size: 8.5pt;
+    page-break-inside: avoid;
+  }
+  pre code { color: #333; }
+
+  /* Badges */
+  .badge { border: 1px solid currentColor; background: transparent !important; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid #ccc;
+    color: #777;
+    page-break-before: avoid;
+  }
+
+  /* Hide animations */
+  * { animation: none !important; transition: none !important; }
+
+  /* Sensor-level page breaks for cleaner PDF flow */
+  .page-break-before { page-break-before: always; }
+  h3 { page-break-inside: avoid; }
+
+  /* Prevent orphan headings at bottom of page */
+  h2, h3, h4 {
+    orphans: 3;
+    widows: 3;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- HERO -->
+<!-- ============================================================ -->
+<header class="hero">
+  <div class="container">
+    <h1>🛰️ <span>RSDTK</span> User Guide</h1>
+    <p class="subtitle">Remote Sensing Data Toolkit — Batch Processing for Analysis-Ready Imagery</p>
+    <span class="version-badge">VERSION 1.1</span>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<!-- TABLE OF CONTENTS -->
+<!-- ============================================================ -->
+<div class="container">
+  <nav class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#getting-started">Getting Started</a></li>
+      <li><a href="#gui-walkthrough">GUI Walkthrough</a></li>
+      <li><a href="#sensors">Supported Sensors &amp; Datasets</a>
+        <ol>
+          <li><a href="#aster">ASTER (V004 GeoTIFF &amp; V003 HDF)</a></li>
+          <li><a href="#landsat">Landsat (All Missions — L1–9)</a></li>
+          <li><a href="#sentinel2">Sentinel-2 L2A</a></li>
+          <li><a href="#sentinel3">Sentinel-3 (SLSTR, OLCI, Synergy)</a></li>
+          <li><a href="#ecostress">ECOSTRESS (L1CT &amp; L2 LSTE)</a></li>
+          <li><a href="#viirs">VIIRS (VNP02IMG, VNP02MOD, VNP21)</a></li>
+          <li><a href="#modis">MODIS (Surface Reflectance &amp; LST)</a></li>
+          <li><a href="#emit">EMIT L2A</a></li>
+          <li><a href="#airs">AIRS L1B</a></li>
+          <li><a href="#master">MASTER (L1B &amp; L2)</a></li>
+          <li><a href="#hytes">HyTES (L1 &amp; L2)</a></li>
+          <li><a href="#aviris3">AVIRIS-3/5 (L1B &amp; L2A)</a></li>
+          <li><a href="#aviris-ng">AVIRIS-NG &amp; Classic AVIRIS</a></li>
+        </ol>
+      </li>
+      <li><a href="#features">Shared Features</a></li>
+      <li><a href="#output-formats">Output Formats</a></li>
+      <li><a href="#troubleshooting">Troubleshooting</a></li>
+    </ol>
+  </nav>
+
+  <div class="callout success" style="max-width: 700px; margin: 0 auto 40px;">
+    <div class="callout-title">🆕 What's New in v1.2</div>
+    <p><strong>New sensors:</strong> MODIS (MOD09GA/MYD09GA surface reflectance + MOD11A1/MYD11A1 LST/emissivity), Sentinel-3 (SLSTR L1B/L2 LST, OLCI L1B, Synergy L2 surface reflectance), AVIRIS-NG &amp; Classic AVIRIS (L1B radiance, L2 reflectance), and AVIRIS-3/5 L2A surface reflectance.</p>
+    <p><strong>Landsat all missions:</strong> Now supports Landsat 1–9 (OLI/TIRS, ETM+, TM, MSS) with auto-detection from MTL metadata. L1/L2 scene discovery fixed for mixed folders.</p>
+    <p><strong>GUI restructure:</strong> 10 unified sensor cards with product dropdowns (previously 15 separate cards). Scrollable processing panel.</p>
+    <p><strong>Water vapor exclusion:</strong> Extended to 1334–1440 nm to catch edge channels with negative reflectance.</p>
+    <p><strong>Reflectance validity masking</strong> — AST_05 emissivity and AST_07 reflectance pixels outside the 0–1 range are automatically masked (NaN in GeoTIFF, 0 in ENVI).</p>
+    <p><strong>Open File Location button</strong> — quickly open the output folder in Windows Explorer after processing.</p>
+    <p><strong>Overwrite fixes</strong> — the overwrite toggle now works correctly across all 14 sensors.</p>
+    <p><strong>Sentinel-2 JP2 support</strong> — JP2OpenJPEG driver now bundled correctly in the standalone exe.</p>
+    <p><strong>Bug fix</strong> — original ASTER V004 input files are no longer moved during processing.</p>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ============================================================ -->
+<!-- 1. OVERVIEW -->
+<!-- ============================================================ -->
+<section id="overview">
+  <h2><span class="section-num">01</span> Overview</h2>
+  <p>RSDTK (Remote Sensing Data Toolkit) is a desktop application for batch converting satellite and airborne remote sensing data into analysis-ready formats. It handles the tedious work of merging single-band files, applying calibration and scaling factors, reprojecting swath data, and writing standardized GeoTIFF and ENVI outputs — all through a point-and-click interface.</p>
+
+  <p>RSDTK supports <strong>14 sensor families</strong> with <strong>30+ product types</strong> across three categories:</p>
+
+  <div class="sensor-grid">
+    <div class="sensor-card">
+      <div class="sensor-icon">🛰️</div>
+      <div class="sensor-name">Spaceborne Multispectral</div>
+      <div class="sensor-desc">ASTER, Landsat 1–9, Sentinel-2, Sentinel-3, ECOSTRESS, VIIRS, MODIS</div>
+      <span class="badge badge-multi">15+ PRODUCTS</span>
+    </div>
+    <div class="sensor-card">
+      <div class="sensor-icon">🌈</div>
+      <div class="sensor-name">Spaceborne Hyperspectral</div>
+      <div class="sensor-desc">EMIT (285 bands), AIRS (2378 channels)</div>
+      <span class="badge badge-hyper">2 PRODUCTS</span>
+    </div>
+    <div class="sensor-card">
+      <div class="sensor-icon">✈️</div>
+      <div class="sensor-name">Airborne</div>
+      <div class="sensor-desc">MASTER, HyTES, AVIRIS-3/5, AVIRIS-NG, Classic AVIRIS</div>
+      <span class="badge badge-tir">10+ PRODUCTS</span>
+    </div>
+    <div class="sensor-card">
+      <div class="sensor-icon">📦</div>
+      <div class="sensor-name">Output Formats</div>
+      <div class="sensor-desc">Multiband GeoTIFF (DEFLATE compressed) and ENVI (BSQ with wavelength metadata)</div>
+      <span class="badge badge-vnir">GEOTIFF + ENVI</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 2. GETTING STARTED -->
+<!-- ============================================================ -->
+<section id="getting-started">
+  <h2><span class="section-num">02</span> Getting Started</h2>
+
+  <h3>Installation</h3>
+  <p>If you received the installer (<code>RSDTK_v1.2_Setup.exe</code>), simply run it and follow the prompts. RSDTK is fully self-contained — no Python or additional software is needed.</p>
+
+  <h3>Data Preparation</h3>
+  <p>Before processing, organize your data as downloaded from NASA EarthData or the relevant data provider. RSDTK supports two folder layouts:</p>
+
+  <div class="callout">
+    <div class="callout-title">📁 Subfolder Mode (Recommended)</div>
+    <p>One subfolder per granule, as downloaded from LP DAAC:</p>
+    <pre><code>ASTER_Data/
+├── AST_05_00304122020150510_20210222115129_26357/
+│   ├── AST_05_..._SRE_TIR_B10.tif
+│   ├── AST_05_..._SRE_TIR_B11.tif
+│   └── ...
+├── AST_05_00305142020150455_20210222115159_26490/
+│   └── ...</code></pre>
+  </div>
+
+  <div class="callout success">
+    <div class="callout-title">📁 Flat Folder Mode</div>
+    <p>All files from multiple granules in a single folder — RSDTK will auto-group them by granule ID:</p>
+    <pre><code>ASTER_Data/
+├── AST_05_..._26357_SRE_TIR_B10.tif
+├── AST_05_..._26357_SRE_TIR_B11.tif
+├── AST_05_..._26490_SRE_TIR_B10.tif
+└── ...</code></pre>
+  </div>
+
+  <h3>Quick Start</h3>
+  <ol class="steps">
+    <li><strong>Launch RSDTK</strong> — double-click the desktop shortcut or find it in the Start Menu.</li>
+    <li><strong>Select a sensor</strong> — click a sensor card from the left panel (e.g. "ASTER").</li>
+    <li><strong>Set options</strong> — choose the data version (V004/V003 for ASTER), product type, and output format.</li>
+    <li><strong>Choose folders</strong> — set your input folder (where the raw data lives) and optionally an output folder.</li>
+    <li><strong>Click "Process Data"</strong> — watch the log panel for progress. Output files appear in GeoTIFF/ and ENVI/ subfolders.</li>
+  </ol>
+</section>
+
+<!-- ============================================================ -->
+<!-- 3. GUI WALKTHROUGH -->
+<!-- ============================================================ -->
+<section id="gui-walkthrough">
+  <h2><span class="section-num">03</span> GUI Walkthrough</h2>
+
+  <h3>Sidebar</h3>
+  <p>The dark sidebar on the left contains navigation buttons (<strong>Sensor Selection</strong> and <strong>Processing</strong>) and an <strong>Appearance</strong> toggle to switch between Dark, Light, and System themes. The sidebar remains dark in all themes for readability.</p>
+
+  <h3>Sensor Selection Panel</h3>
+  <p>Click any sensor card to select it. The card highlights in red and the view automatically switches to the Processing panel. Sensors are organized into three groups: Spaceborne Multispectral, Spaceborne Hyperspectral, and Airborne.</p>
+
+  <h3>Processing Panel</h3>
+  <p>The processing panel contains:</p>
+  <ul style="margin-left: 20px; margin-bottom: 16px;">
+    <li><strong>Input/Output folders</strong> — use Browse buttons to select. Output defaults to <code>input/converted/</code>.</li>
+    <li><strong>Output Format</strong> — choose GeoTIFF, ENVI, or Both.</li>
+    <li><strong>Overwrite</strong> — when checked (default), existing files are replaced. When unchecked, filenames auto-increment (<code>_v2</code>, <code>_v3</code>).</li>
+    <li><strong>Sensor-specific options</strong> — product type, projection, resolution, band selection, etc.</li>
+    <li><strong>Spatial Subset</strong> — optional bounding box (manual coordinates or shapefile/KML/GeoJSON).</li>
+    <li><strong>Spectral Options</strong> — for hyperspectral sensors: every-Nth band, wavelength ranges, or match to another sensor's bands.</li>
+    <li><strong>Processing Log</strong> — real-time output showing progress, warnings, and any errors.</li>
+    <li><strong>Process Data / Cancel / Open File Location</strong> — start processing, cancel a running job, or open the output folder in Windows Explorer after processing completes.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<!-- 4. SUPPORTED SENSORS -->
+<!-- ============================================================ -->
+<section id="sensors">
+  <h2><span class="section-num">04</span> Supported Sensors &amp; Datasets</h2>
+
+  <!-- ---- ASTER ---- -->
+  <h3 id="aster">🏔️ ASTER — Advanced Spaceborne Thermal Emission and Reflection Radiometer</h3>
+  <p>ASTER flies on NASA's Terra satellite (launched 1999) and captures data in 14 bands spanning VNIR (0.52–0.86 µm), SWIR (1.6–2.43 µm), and TIR (8.1–11.7 µm). NASA distributes ASTER data through the LP DAAC in two versions:</p>
+
+  <div class="callout">
+    <div class="callout-title">ℹ️ V004 vs V003</div>
+    <p><strong>V004 (current)</strong> — individual GeoTIFF files per band, already map-projected. RSDTK merges them into multiband files and applies scaling factors.</p>
+    <p><strong>V003 (legacy)</strong> — single HDF4 files containing all bands. RSDTK reads bands via <code>pyhdf</code>, applies scaling, and builds geolocation from tie-point arrays or sidecar metadata files (.aux.xml / .met).</p>
+  </div>
+
+  <table>
+    <tr><th>Product</th><th>Description</th><th>Bands</th><th>Scaling</th><th>V004</th><th>V003</th></tr>
+    <tr><td><code>AST_05</code></td><td>TIR Surface Emissivity</td><td>10–14 (5 bands)</td><td>DN × 0.001 → 0–1</td><td>✅</td><td>✅</td></tr>
+    <tr><td><code>AST_07</code></td><td>Surface Reflectance VNIR</td><td>1, 2, 3N (3 bands)</td><td>DN × 0.001 → 0–1</td><td>✅</td><td>✅</td></tr>
+    <tr><td><code>AST_07XT</code></td><td>Surface Reflectance SWIR</td><td>4–9 (6 bands)</td><td>DN × 0.001 → 0–1</td><td>✅</td><td>✅</td></tr>
+    <tr><td><code>AST_07M</code></td><td>Merged VNIR+SWIR Reflectance</td><td>1–9 (9 bands @ 30m)</td><td>DN × 0.001 → 0–1</td><td>—</td><td>✅</td></tr>
+    <tr><td><code>AST_08</code></td><td>Surface Kinetic Temperature</td><td>1 band</td><td>DN × 0.1 → Kelvin</td><td>✅</td><td>✅</td></tr>
+    <tr><td><code>AST_09T</code></td><td>TIR Calibrated Radiance</td><td>10–14 (5 SRA + 5 SIR)</td><td>DN × per-band UCC</td><td>✅</td><td>✅</td></tr>
+    <tr><td><code>AST_L1T</code></td><td>Terrain-Corrected Radiance</td><td>1–14 (VNIR/SWIR/TIR)</td><td>TIR: (DN−1)×UCC</td><td>✅</td><td>—</td></tr>
+  </table>
+
+  <div class="callout success">
+    <div class="callout-title">✨ AST_07M — Merged Product</div>
+    <p>Exclusive to V003 processing. When you select AST_07M, RSDTK processes both VNIR and SWIR files individually, then matches pairs by acquisition timestamp, downsamples the VNIR from 15m to 30m via 2×2 block averaging, and creates a single 9-band reflectance cube. Pairs are matched by reading the SDS contents (not filenames) to correctly identify VNIR vs SWIR files.</p>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ V003 Hemisphere Note</div>
+    <p>NASA's V003 .aux.xml metadata often incorrectly labels southern-hemisphere scenes as "Northern Hemisphere" in the WKT string. RSDTK derives the UTM hemisphere from the actual latitude of the tie-point arrays, not from the metadata WKT.</p>
+  </div>
+
+  <div class="callout success">
+    <div class="callout-title">📋 QA Output Files (v1.1)</div>
+    <p>For V004 products, RSDTK now creates a separate QA multiband file alongside each science output, containing the <code>QA_DataPlane</code> and <code>QA_DataPlane2</code> layers. For AST_09T, separate QA files are created for SurfaceRadiance and SkyIrradiance. QA files are named with a <code>_QA</code> suffix.</p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">ℹ️ Reflectance / Emissivity Validity Masking (v1.1)</div>
+    <p>For AST_05 (emissivity) and AST_07 (reflectance), any pixels with scaled values outside the physically valid 0–1 range are automatically set to NaN in GeoTIFF output and 0 in ENVI output. These artifacts typically arise from failed atmospheric correction over clouds, shadows, or saturated pixels.</p>
+  </div>
+
+  <!-- ---- LANDSAT ---- -->
+  <h3 id="landsat">🛰️ Landsat — Collection 2 (All Missions)</h3>
+  <p>RSDTK supports the full Landsat archive (Landsat 1–9) with auto-detection from MTL metadata. NASA/USGS distributes Collection 2 data as individual GeoTIFF bands via EarthExplorer or the USGS M2M API.</p>
+
+  <div class="product-block">
+    <h4>Level-1 (Top of Atmosphere)</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>L8/9 OLI/TIRS:</strong> VSWIR (B1–7,9) + TIR (B10–11) + Pan (B8)</span>
+      <span class="meta-item"><strong>L7 ETM+:</strong> VSWIR (B1–5,7) + TIR (B6 VCID 1/2) + Pan (B8)</span>
+      <span class="meta-item"><strong>L4/5 TM:</strong> VSWIR (B1–5,7) + TIR (B6)</span>
+      <span class="meta-item"><strong>L1–5 MSS:</strong> 4 VSWIR bands (L1–3: B4–7, L4–5: B1–4)</span>
+    </div>
+    <p>RSDTK applies reflectance/radiance calibration from the MTL file and outputs separate VSWIR, TIR, and Panchromatic multiband files. The sensor is auto-detected — you can point at any L1TP/L1GT folder.</p>
+  </div>
+
+  <div class="product-block">
+    <h4>Level-2 (Surface Products)</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>L8/9:</strong> SR (B1–7) + ST (B10) + Ancillary (7 layers)</span>
+      <span class="meta-item"><strong>L7 ETM+:</strong> SR (B1–5,7) + ST (B6) + Ancillary</span>
+      <span class="meta-item"><strong>L4/5 TM:</strong> SR (B1–5,7) + ST (B6) + Ancillary</span>
+    </div>
+    <p>L2SP products are atmospherically corrected. RSDTK handles the ST_B10 vs ST_B6 naming difference automatically. No MSS Level-2 products exist.</p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">ℹ️ Mixed L1/L2 Folders</div>
+    <p>If L1TP and L2SP files share the same folder, RSDTK's scene discovery automatically selects the correct MTL for the product you chose — L1TP for Level-1, L2SP for Level-2.</p>
+  </div>
+
+  <!-- ---- SENTINEL-2 ---- -->
+  <h3 id="sentinel2">🛰️ Sentinel-2 L2A — Surface Reflectance</h3>
+  <p>Sentinel-2A (2015) and Sentinel-2B (2017) from ESA's Copernicus programme carry the MSI (Multispectral Instrument) with 13 bands at 10m, 20m, and 60m resolution. L2A products are atmospherically corrected by the Sen2Cor processor.</p>
+
+  <div class="product-block">
+    <h4>Products</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>R10m:</strong> B02, B03, B04, B08 (Blue, Green, Red, NIR)</span>
+      <span class="meta-item"><strong>R20m:</strong> B01–B07, B8A, B11, B12 (10 bands)</span>
+      <span class="meta-item"><strong>SCL:</strong> Scene Classification Layer</span>
+    </div>
+    <p>NASA/ESA distributes Sentinel-2 as SAFE format folders. RSDTK reads the individual JP2/GeoTIFF bands from the <code>.SAFE</code> directory structure and merges them into multiband outputs at their native resolutions.</p>
+  </div>
+
+  <!-- ---- SENTINEL-3 ---- -->
+  <h3 id="sentinel3" class="page-break-before">🛰️ Sentinel-3 — SLSTR, OLCI &amp; Synergy</h3>
+  <p>Sentinel-3A (2016) and S3B (2018) from ESA's Copernicus programme carry SLSTR (thermal/VNIR, 500m–1km) and OLCI (21-band VNIR, 300m). Data is distributed as .SEN3 folders of NetCDF files via Copernicus Data Space. Product type is auto-detected from the folder name.</p>
+
+  <div class="product-block">
+    <h4>SLSTR L1B RBT (Radiance / Brightness Temperature)</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>VNIR/SWIR:</strong> S1–S6 radiance (500m nadir)</span>
+      <span class="meta-item"><strong>TIR:</strong> S7–S9 + F2 brightness temperature (1km)</span>
+      <span class="meta-item"><strong>Fire:</strong> F1 brightness temperature (1km, separate grid)</span>
+    </div>
+    <p>Outputs three files per scene: VNIR/SWIR Radiance, TIR BT, and Fire BT. Reprojected from swath to geographic WGS-84 grid via KD-tree.</p>
+  </div>
+
+  <div class="product-block">
+    <h4>SLSTR L2 LST (Land Surface Temperature)</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>LST:</strong> Day/Night surface temperature (K) + uncertainty (1km)</span>
+    </div>
+  </div>
+
+  <div class="product-block">
+    <h4>OLCI L1B EFR (Full Resolution TOA Radiance)</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>Bands:</strong> Oa01–Oa21 (400–1020 nm, 300m)</span>
+    </div>
+    <p>21-band TOA radiance covering ocean colour, vegetation, and atmospheric channels.</p>
+  </div>
+
+  <div class="product-block">
+    <h4>Synergy L2 SYN (Surface Reflectance)</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>OLCI:</strong> 16 bands surface reflectance (Oa01–12, 16–18, 21)</span>
+      <span class="meta-item"><strong>SLSTR:</strong> 5 bands surface reflectance (S1–3, 5–6 nadir)</span>
+    </div>
+    <p>Combined OLCI+SLSTR atmospherically corrected product on the 300m OLCI grid. O₂ absorption and water vapour bands (Oa13–15, 19–20) are excluded by ESA.</p>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ Long Folder Names</div>
+    <p>Sentinel-3 .SEN3 folder names can exceed Windows path limits. Keep input directories short, or extract the .SEN3 folder contents into shorter-named directories.</p>
+  </div>
+
+  <!-- ---- ECOSTRESS ---- -->
+  <h3 id="ecostress" class="page-break-before">🌡️ ECOSTRESS — ECOsystem Spaceborne Thermal Radiometer on Space Station</h3>
+  <p>ECOSTRESS (2018, ISS) measures surface temperature and emissivity with 5 TIR bands (8–12.5 µm) at ~70m resolution. Data is available from LP DAAC.</p>
+
+  <div class="product-block">
+    <h4>L1CT — Terrain-Corrected Radiance</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>Format:</strong> Individual GeoTIFF bands</span>
+      <span class="meta-item"><strong>Bands:</strong> 5 TIR radiance + cloud/water/QA masks</span>
+      <span class="meta-item"><strong>Resolution:</strong> ~70m</span>
+    </div>
+    <p>RSDTK merges the individual radiance band GeoTIFFs into a single multiband file, similar to the ASTER V004 workflow.</p>
+  </div>
+
+  <div class="product-block">
+    <h4>L2 LSTE — Land Surface Temperature &amp; Emissivity</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>Format:</strong> HDF5 (.h5)</span>
+      <span class="meta-item"><strong>Products:</strong> LST, 5-band Emissivity, Emissivity WB, QA/Errors</span>
+      <span class="meta-item"><strong>Reprojection:</strong> KD-tree swath → Geographic or UTM</span>
+    </div>
+    <p>L2 LSTE data is in swath format requiring reprojection. RSDTK uses KD-tree spatial interpolation with zero-initialization to avoid NaN propagation. Supports spatial subsetting via bounding box.</p>
+  </div>
+
+  <!-- ---- VIIRS ---- -->
+  <h3 id="viirs" class="page-break-before">🌍 VIIRS — Visible Infrared Imaging Radiometer Suite</h3>
+  <p>VIIRS flies on Suomi NPP (2011) and NOAA-20/JPSS-1 (2017), providing global daily coverage. Data is distributed by LAADS DAAC in HDF5/NetCDF format.</p>
+
+  <div class="product-block">
+    <h4>VNP02IMG — Imagery Resolution Bands</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>Bands:</strong> I01–I05 (5 bands, 375m)</span>
+      <span class="meta-item"><strong>Geolocation:</strong> Separate VNP03IMG file required</span>
+    </div>
+  </div>
+
+  <div class="product-block">
+    <h4>VNP02MOD — Moderate Resolution Bands</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>Bands:</strong> M01–M16 (16 bands, 750m)</span>
+      <span class="meta-item"><strong>Geolocation:</strong> Separate VNP03MOD file required</span>
+    </div>
+  </div>
+
+  <div class="product-block">
+    <h4>VNP21 — Land Surface Temperature &amp; Emissivity</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>Products:</strong> LST, Emis_14/15/16, errors, QA, view angle</span>
+      <span class="meta-item"><strong>Geolocation:</strong> Embedded in file</span>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">ℹ️ VIIRS Band Selection</div>
+    <p>VIIRS files can take ~15 minutes to process at full band count. Use the <strong>Bands</strong> dropdown to select subsets:</p>
+    <table>
+      <tr><th>Preset</th><th>Bands</th><th>Use Case</th></tr>
+      <tr><td>TIR only (M14–M16)</td><td>3 bands</td><td>Temperature/emissivity</td></tr>
+      <tr><td>Split-window (M15, M16)</td><td>2 bands</td><td>Split-window technique</td></tr>
+      <tr><td>MIR + TIR (M12–M16)</td><td>5 bands</td><td>Hot spot detection + thermal</td></tr>
+      <tr><td>VSWIR only (M01–M11)</td><td>11 bands</td><td>Reflective bands</td></tr>
+      <tr><td>I-band TIR (I04, I05)</td><td>2 bands</td><td>375m thermal</td></tr>
+    </table>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ Geolocation Files</div>
+    <p>VNP02IMG and VNP02MOD require matching VNP03IMG/VNP03MOD geolocation files in the same folder. VNP21 has embedded geolocation and doesn't need a separate file. RSDTK auto-detects the matching geo file.</p>
+  </div>
+
+  <!-- ---- MODIS ---- -->
+  <h3 id="modis" class="page-break-before">🛰️ MODIS — Moderate Resolution Imaging Spectroradiometer</h3>
+  <p>MODIS flies on both Terra (2000) and Aqua (2002). RSDTK supports gridded daily products in HDF-EOS2 format from LP DAAC. Output retains the native sinusoidal projection — reproject in ArcGIS Pro or QGIS as needed.</p>
+
+  <div class="product-block">
+    <h4>Surface Reflectance (MOD09GA / MYD09GA)</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>Bands:</strong> 1–7 (Red, NIR, Blue, Green, SWIR ×3)</span>
+      <span class="meta-item"><strong>Resolution:</strong> 500m (2400 × 2400 per tile)</span>
+      <span class="meta-item"><strong>Scale:</strong> 0.0001, fill = -28672</span>
+    </div>
+  </div>
+
+  <div class="product-block">
+    <h4>LST / Emissivity (MOD11A1 / MYD11A1)</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>LST:</strong> Day + Night surface temperature (K)</span>
+      <span class="meta-item"><strong>Emissivity:</strong> Band 31 (11.03 µm) + Band 32 (12.02 µm)</span>
+      <span class="meta-item"><strong>Resolution:</strong> 1km (1200 × 1200 per tile)</span>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">ℹ️ Sinusoidal Projection</div>
+    <p>MODIS data stays in its native sinusoidal projection to avoid resampling artifacts. The CRS is embedded in the GeoTIFF — ArcGIS Pro and QGIS will reproject on-the-fly for display.</p>
+  </div>
+
+  <!-- ---- EMIT ---- -->
+  <h3 id="emit" class="page-break-before">🌈 EMIT L2A — Earth Surface Mineral Dust Source Investigation</h3>
+  <p>EMIT (2022, ISS) is a hyperspectral VSWIR imaging spectrometer with 285 bands spanning 380–2500 nm at 60m resolution. L2A products contain atmospherically corrected surface reflectance. Data is in NetCDF4 format from LP DAAC.</p>
+
+  <div class="product-block">
+    <h4>Orthorectification</h4>
+    <p>EMIT uses a GLT (Geometric Lookup Table) for orthorectification — significantly faster than KD-tree methods. The GLT maps each output pixel to its corresponding input swath position. RSDTK supports spatial subsetting by clipping the GLT window to a bounding box.</p>
+    <div class="product-meta">
+      <span class="meta-item"><strong>Bands:</strong> Up to 285 (good wavelengths filter available)</span>
+      <span class="meta-item"><strong>Spectral options:</strong> Match to Landsat, Sentinel-2, ASTER, or MODIS bands</span>
+      <span class="meta-item"><strong>Optional:</strong> RMSE uncertainty cube</span>
+    </div>
+  </div>
+
+  <!-- ---- AIRS ---- -->
+  <h3 id="airs">📡 AIRS L1B — Atmospheric Infrared Sounder</h3>
+  <p>AIRS (2002, Aqua satellite) is a hyperspectral infrared sounder with 2378 channels spanning 3.7–15.4 µm at ~13.5 km resolution. L1B products contain calibrated radiance in HDF-EOS format.</p>
+
+  <div class="product-block">
+    <div class="product-meta">
+      <span class="meta-item"><strong>Channels:</strong> 2378 (ordered by ascending wavelength)</span>
+      <span class="meta-item"><strong>Band names:</strong> Include both wavelength (µm) and wavenumber (cm⁻¹)</span>
+      <span class="meta-item"><strong>Reprojection:</strong> KD-tree (135 × 90 pixel swath)</span>
+    </div>
+  </div>
+
+  <!-- ---- MASTER ---- -->
+  <h3 id="master" class="page-break-before">✈️ MASTER — MODIS/ASTER Airborne Simulator</h3>
+  <p>MASTER is a JPL airborne instrument with 50 bands spanning VNIR through TIR (0.46–12.8 µm). It flies on NASA's ER-2 and other aircraft for calibration/validation campaigns.</p>
+
+  <div class="product-block">
+    <h4>L1B — Calibrated Radiance</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>Format:</strong> HDF4</span>
+      <span class="meta-item"><strong>Bands:</strong> 50 (VSWIR + TIR)</span>
+      <span class="meta-item"><strong>Option:</strong> Convert VSWIR to TOA Reflectance</span>
+      <span class="meta-item"><strong>Resolution:</strong> Configurable (default 50m)</span>
+    </div>
+  </div>
+
+  <div class="product-block">
+    <h4>L2 — Emissivity &amp; LST</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>Format:</strong> HDF5</span>
+      <span class="meta-item"><strong>Products:</strong> Emissivity, Land Surface Temperature, QA</span>
+    </div>
+  </div>
+
+  <!-- ---- HYTES ---- -->
+  <h3 id="hytes">✈️ HyTES — Hyperspectral Thermal Emission Spectrometer</h3>
+  <p>HyTES is a JPL airborne TIR hyperspectral sensor with 256 bands spanning 7.5–12 µm. It provides very high spectral resolution thermal data for mineral mapping and volcanic monitoring.</p>
+
+  <div class="product-block">
+    <h4>L1 — Calibrated Radiance</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>Bands:</strong> 256 TIR channels</span>
+      <span class="meta-item"><strong>Resolution:</strong> Configurable (native ~1.7m)</span>
+    </div>
+  </div>
+
+  <div class="product-block">
+    <h4>L2 — Emissivity &amp; LST</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>Products:</strong> Emissivity (5 bands), LST, PC Emissivity (256 bands, optional)</span>
+    </div>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ Large File Sizes</div>
+    <p>HyTES L1 data at native resolution with 256 bands can produce very large files (7+ GB). Use the <strong>Resolution</strong> field to downsample (e.g. 20m) and/or spectral subsetting to reduce output size.</p>
+  </div>
+
+  <!-- ---- AVIRIS-3 ---- -->
+  <h3 id="aviris3" class="page-break-before">✈️ AVIRIS-3/5 — Airborne Visible/Infrared Imaging Spectrometer</h3>
+  <p>AVIRIS-3 (284 bands, 390–2500 nm) and AVIRIS-5 (424 bands) are JPL's latest airborne VSWIR hyperspectral sensors. Both are auto-detected from the AV3/AV5 filename prefix.</p>
+
+  <div class="product-block">
+    <h4>L1B Calibrated Radiance</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>Format:</strong> NetCDF4 with GLT orthorectification</span>
+      <span class="meta-item"><strong>Resolution:</strong> Configurable (native varies by altitude)</span>
+      <span class="meta-item"><strong>Water vapor:</strong> Auto-excluded (1334–1440 nm, 1788–1980 nm)</span>
+    </div>
+  </div>
+
+  <div class="product-block">
+    <h4>L2A Surface Reflectance (from EarthData/ORNL DAAC)</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>Format:</strong> Orthorectified NetCDF4 on UTM grid</span>
+      <span class="meta-item"><strong>Ancillary:</strong> AOT + Water Vapor (separate 2-band file)</span>
+      <span class="meta-item"><strong>Spatial subset:</strong> Supported (lon/lat → UTM crop)</span>
+    </div>
+    <p>L2A files are already orthorectified — no GLT needed. RSDTK reads the reflectance, wavelength, and FWHM from NetCDF groups and writes analysis-ready outputs.</p>
+  </div>
+
+  <!-- ---- AVIRIS-NG & Classic ---- -->
+  <h3 id="aviris-ng">✈️ AVIRIS-NG &amp; Classic AVIRIS</h3>
+  <p>AVIRIS-NG (425 bands, 5 nm spacing, 3.7m) and Classic AVIRIS (224 bands, 10 nm spacing, 15.7m) are earlier-generation JPL spectrometers. Both are distributed as orthorectified ENVI binary files.</p>
+
+  <div class="product-block">
+    <h4>AVIRIS-NG</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>L1B:</strong> <code>ang{date}t{time}_rdn_*_img</code> (radiance)</span>
+      <span class="meta-item"><strong>L2:</strong> <code>ang{date}t{time}_corr_*_img</code> (reflectance)</span>
+      <span class="meta-item"><strong>Projection:</strong> UTM with rotation (handled via affine transform)</span>
+    </div>
+  </div>
+
+  <div class="product-block">
+    <h4>Classic AVIRIS</h4>
+    <div class="product-meta">
+      <span class="meta-item"><strong>L1B:</strong> <code>f{date}t{nn}p{nn}r{nn}rdn_g_*ort_img</code> (radiance)</span>
+      <span class="meta-item"><strong>L2:</strong> <code>f{date}t{nn}p{nn}r{nn}_rfl</code> (reflectance)</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 5. SHARED FEATURES -->
+<!-- ============================================================ -->
+<section id="features">
+  <h2><span class="section-num">05</span> Shared Features</h2>
+
+  <h3>Spatial Subsetting (Bounding Box)</h3>
+  <p>Available for: ECOSTRESS, EMIT, AVIRIS-3/5 (L1B and L2A), AVIRIS-NG, Classic AVIRIS, Sentinel-3, MASTER, HyTES, AIRS. Enter coordinates manually (min/max lat/lon) or browse to a shapefile, KML, or GeoJSON file. The bounding box clips the output grid before processing, reducing both processing time and file size.</p>
+
+  <h3>Spectral Subsetting</h3>
+  <p>Available for: EMIT, AVIRIS-3/5 (L1B and L2A), AVIRIS-NG, Classic AVIRIS, MASTER L1B, HyTES L1/L2, AIRS. Options include:</p>
+  <table>
+    <tr><th>Mode</th><th>Description</th></tr>
+    <tr><td><strong>Every Nth</strong></td><td>Keep every Nth band (e.g. every 5th for quick previews)</td></tr>
+    <tr><td><strong>Custom Range</strong></td><td>Specify wavelength ranges (e.g. <code>450-900,2000-2400</code> nm)</td></tr>
+    <tr><td><strong>Region</strong></td><td>VNIR only, SWIR only, VIS, NIR, or Full</td></tr>
+    <tr><td><strong>Match Sensor</strong></td><td>Resample to Landsat 8/9, Sentinel-2, ASTER, or MODIS band positions</td></tr>
+  </table>
+
+  <h3>Overwrite Control</h3>
+  <p>The "Overwrite existing files" checkbox (default: ON) controls whether existing output files are replaced or auto-incremented with <code>_v2</code>, <code>_v3</code> suffixes. This applies to all sensors.</p>
+
+  <h3>Reprojection</h3>
+  <p>Swath-format sensors (ECOSTRESS, VIIRS, Sentinel-3 SLSTR/OLCI/Synergy, MASTER, HyTES, AIRS) are reprojected to Geographic (EPSG:4326) using KD-tree nearest-neighbor interpolation. MODIS data stays in native sinusoidal projection. Landsat, Sentinel-2, ASTER, AVIRIS-3/5, and AVIRIS-NG/Classic are already on regular grids and need no reprojection.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- 6. OUTPUT FORMATS -->
+<!-- ============================================================ -->
+<section id="output-formats">
+  <h2><span class="section-num">06</span> Output Formats</h2>
+
+  <div class="product-block">
+    <h4>GeoTIFF</h4>
+    <p>Multiband float32 with DEFLATE compression (predictor=2, zlevel=6). Includes CRS, geotransform, band descriptions, and NaN nodata. Compatible with ArcGIS Pro, QGIS, Google Earth Engine, and all standard GIS software.</p>
+  </div>
+
+  <div class="product-block">
+    <h4>ENVI</h4>
+    <p>BSQ (Band Sequential) format with a companion <code>.hdr</code> header file. Includes wavelength metadata in micrometers (TIR) or nanometers (VSWIR), band names, and coordinate system information. Nodata value is <code>-9999</code> (ENVI does not support NaN). Optimized for ENVI software's spectral analysis tools.</p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">ℹ️ Output Organization</div>
+    <p>RSDTK automatically organizes output files into <code>GeoTIFF/</code> and <code>ENVI/</code> subfolders within the output directory. For AST_09T, Surface Radiance and Sky Irradiance files are further separated into their own subfolders.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 7. TROUBLESHOOTING -->
+<!-- ============================================================ -->
+<section id="troubleshooting">
+  <h2><span class="section-num">07</span> Troubleshooting</h2>
+
+  <div class="callout danger">
+    <div class="callout-title">🔴 "No files found" error</div>
+    <p>Make sure you're pointing to the correct folder and have selected the right sensor/product type. For ASTER, check that V003/V004 toggle matches your data format (.hdf vs .tif).</p>
+  </div>
+
+  <div class="callout danger">
+    <div class="callout-title">🔴 VIIRS "No matching geolocation file"</div>
+    <p>VNP02IMG/VNP02MOD files require matching VNP03IMG/VNP03MOD geolocation files in the same input folder. Download both from LAADS DAAC.</p>
+  </div>
+
+  <div class="callout danger">
+    <div class="callout-title">🔴 ENVI header read error</div>
+    <p>If ENVI can't read a header file, check for any stale <code>.aux.xml</code> files alongside the <code>.dat</code> file and delete them — these are spurious files created by rasterio that can confuse ENVI.</p>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ Processing is very slow</div>
+    <p>For VIIRS: use the band selection presets to process only the bands you need. For HyTES/MASTER: increase the output resolution (e.g. 20m instead of native). For AVIRIS-3: use the resolution field and/or spectral subsetting.</p>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ Output file in wrong location</div>
+    <p>For ASTER V003 southern hemisphere scenes: the output should now be correctly placed in UTM South. If using very old output files, delete them and reprocess — earlier versions had a hemisphere bug in the NASA metadata.</p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">ℹ️ Reporting Issues</div>
+    <p>Copy the full error text from the Processing Log panel (use the scroll bar to see the complete traceback) and share it when reporting issues. The log captures all converter output and Python exceptions.</p>
+  </div>
+</section>
+
+</div><!-- end container -->
+
+<!-- ============================================================ -->
+<!-- FOOTER -->
+<!-- ============================================================ -->
+<footer>
+  <div class="container">
+    <p>RSDTK v1.2 — Remote Sensing Data Toolkit</p>
+    <p>University of Pittsburgh — Department of Geology &amp; Environmental Science</p>
+    <p style="margin-top: 8px;">Built for researchers, by researchers.</p>
+  </div>
+</footer>
+
+</body>
+</html>

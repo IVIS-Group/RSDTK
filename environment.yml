@@ -1,0 +1,43 @@
+# Conda environment for RSDTK.
+#
+# Recommended over pip: GDAL, pyhdf, and rasterio all install far more
+# reliably from conda-forge than from PyPI, particularly on Windows.
+#
+#     conda env create -f environment.yml
+#     conda activate rsdtk
+#     python RSDTK.py
+#
+# Before release, replace the lower bounds below with exact versions from
+# the working environment:
+#     conda env export --no-builds > environment_pinned.yml
+
+name: rsdtk
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python>=3.10
+
+  # Raster I/O and geospatial
+  - rasterio>=1.3
+  - gdal>=3.6
+  - pyproj>=3.4
+
+  # Numerical
+  - numpy>=1.24
+  - scipy>=1.10
+
+  # Format readers
+  - h5py>=3.8
+  - netcdf4>=1.6
+  - pyhdf>=0.11
+
+  # Optional: vector subset file support (shapefile, KML, GeoJSON)
+  - geopandas>=0.13
+  - fiona>=1.9
+
+  - pip
+  - pip:
+      # Not available on conda-forge
+      - customtkinter>=5.2.0
