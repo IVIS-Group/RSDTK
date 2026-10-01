@@ -1,8 +1,7 @@
 # RSDTK — Remote Sensing Data Toolkit
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-<!-- Add after first Zenodo release: -->
-<!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX) -->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23088005.svg)](https://doi.org/10.5281/zenodo.23088005)
 
 A desktop application for batch converting satellite and airborne remote sensing
 data into analysis-ready GeoTIFF and ENVI formats.
